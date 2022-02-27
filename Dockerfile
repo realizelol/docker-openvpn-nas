@@ -60,7 +60,8 @@ VOLUME ["/etc/openvpn"]
 # always expose 1194/udp - remap using '-p 12345:1194/udp'
 EXPOSE 1194/udp
 
-#WORKDIR /etc/openvpn
+# CD to /etc/openvpn
+WORKDIR /etc/openvpn
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod a+x /usr/local/bin/docker-*

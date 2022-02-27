@@ -31,5 +31,7 @@ cat > /etc/services.d/openvpn/run << EOF
 /usr/sbin/openvpn --nodaemon --umask=0077 --pidfile=/var/run/openvpn.pid --logfile=/var/log/openvpn.log
 EOF
 
-echo "$(date +'%Y-%M-%d %H:%M:%S') - Running openvpn"
+SERVER_KEY_FILE=$(find /etc/openvpn -maxdepth 1 -iname "server_*.key" | head -n1)
+
+echo "$(date +'%Y-%m-%d %H:%M:%S') - Running openvpn"
 exec /bin/bash -c "/usr/sbin/openvpn --config /etc/openvpn/server.conf --client-config-dir /etc/openvpn/ccd --crl-verify /etc/openvpn/crl.pem"
