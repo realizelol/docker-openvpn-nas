@@ -1,0 +1,25 @@
+#!/usr/bin/with-contenv bash
+
+# make folders
+mkdir -p /etc/openvpn /dev/net
+
+# create tun device
+if [ ! -c /dev/net/tun ]; then
+  mknod -m 666 /dev/net/tun c 10 200
+fi
+
+# clear old sock files
+for file in /var/sock/openvpn.sock
+	do
+		if [ -e "$file" ]; then
+		rm -rf "$file"
+		fi
+	done
+
+# clear old pid files
+for file in /var/run/openvpn.pid
+	do
+		if [ -e "$file" ]; then
+		rm -rf "$file"
+		fi
+	done
