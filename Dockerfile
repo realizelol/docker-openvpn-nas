@@ -44,12 +44,12 @@ CMD ["apt-get", "install", "-yqq", "-o=Dpkg::Use-Pty=0", "--no-install-recommend
     "google-authenticator", "pamtester", "libqrencode", \
     "bridge-utils", "iproute2", "iptables", "net-tools"]
 # cleanup
-RUN fc-cache \
- && apt-get -qqy clean \
- && apt-get -qqy autoclean \
- && apt-get -qqy autoremove \
- && rm -rf /var/lib/apt/lists/* \
- && rm -rf /tmp/*
+CMD ["fc-cache", \
+ "&&", "apt-get", "-qqy", "clean", \
+ "&&", "apt-get", "-qqy", "autoclean", \
+ "&&", "apt-get", "-qqy", "autoremove", \
+ "&&", "rm", "-rf", "/var/lib/apt/lists/*", \
+ "&&", "rm", "-rf", "/tmp/*"]
 # ?
 #RUN ln -s /usr/share/easy-rsa/easyrsa /usr/local/bin
 
