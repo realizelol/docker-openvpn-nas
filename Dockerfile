@@ -30,11 +30,11 @@ ENV OPENVPN=/etc/openvpn \
 SHELL ["/bin/bash", "-c"]
 
 # add prerequirements for openvpn
-RUN "echo 'deb http://build.openvpn.net/debian/openvpn/stable '${VERSION_CODENAME}' main' \
-    > /etc/apt/sources.list.d/openvpn.list"
-RUN "curl --connect-timeout 15 --retry 10 --max-time 30 -s \
+CMD ["/bin/bash", "-c", "echo 'deb http://build.openvpn.net/debian/openvpn/stable '${VERSION_CODENAME}' main' \
+    > /etc/apt/sources.list.d/openvpn.list"]
+CMD ["/bin/bash", "-c", "curl --connect-timeout 15 --retry 10 --max-time 30 -s \
     'https://swupdate.openvpn.net/repos/repo-public.gpg' \
-    | apt-key add -"
+    | apt-key add -"]
 # do an update & a full-upgrade
 RUN apt-get -qq update \
  && apt-get full-upgrade -yqq -o=Dpkg::Use-Pty=0
