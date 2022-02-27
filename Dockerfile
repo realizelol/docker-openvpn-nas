@@ -63,7 +63,7 @@ WORKDIR /etc/openvpn
 
 ADD docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod a+x /usr/local/bin/docker-*
-CMD ["docker-entrypoint.sh"]
+CMD ["/usr/local/bin/docker-entrypoint.sh"]
 
 # Add support for OTP authentication using a PAM module
 #ADD ./otp/openvpn /etc/pam.d/
