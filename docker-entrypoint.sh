@@ -2,6 +2,13 @@
 set -x
 set -e
 
+if [ ! -e /dev/net/tun ]; then
+	if [ ! -c /dev/net/tun ]; then
+		mkdir -p /dev/net
+		mknod -m 666 /dev/net/tun c 10 200
+	fi
+fi
+
 # noninteractive
 DEBIAN_FRONTEND=noninteractive
 export DEBIAN_FRONTEND=noninteractive
@@ -22,6 +29,9 @@ if [[ ! -f /etc/openvpn/tls-crypt.key ]]; then
   ./easyrsa gen-crl
   cp -rp /etc/easy-rsa/pki/{ca.crt,dh.pem,ta.key,crl.pem,issued,private} /etc/openvpn/server
 fi
+
+# change user privileges
+#chown -R 1000:1000 /etc/openvpn
 
 # install cont-environment
 mkdir -p /etc/services.d/openvpn
