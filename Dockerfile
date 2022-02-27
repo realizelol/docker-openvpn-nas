@@ -32,7 +32,7 @@ ENV OPENVPN_CONF=/etc/openvpn \
 # escape=
 
 # add prerequirements for openvpn
-RUN ["/bin/bash", "-c", "echo" "'deb http://build.openvpn.net/debian/openvpn/stable '${VERSION_CODENAME}' main'", \
+CMD ["/bin/bash", "-c", "echo" "'deb http://build.openvpn.net/debian/openvpn/stable '${VERSION_CODENAME}' main'", \
      ">", "/etc/apt/sources.list.d/openvpn.list"]
 CMD ["curl", "-fsSL", "'https://swupdate.openvpn.net/repos/repo-public.gpg'", "|", "apt-key", "add", "-", ">/dev/null"]
 # do an update & a full-upgrade
@@ -64,7 +64,7 @@ EXPOSE 1194/udp
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod a+x /usr/local/bin/docker-*
 #ENTRYPOINT /usr/local/bin/docker-entrypoint.sh
-#ENTRYPOINT ["/bin/bash"]
+ENTRYPOINT ["/bin/bash"]
 
 # Add support for OTP authentication using a PAM module
 #ADD ./otp/openvpn /etc/pam.d/
