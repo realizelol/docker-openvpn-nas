@@ -17,14 +17,14 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.version=$VERSION \
       org.label-schema.schema-version="1.0"
 
+RUN VERSION_CODENAME=$(grep -oP 'VERSION_CODENAME=\K.*' /etc/os-release)
+
 # Set environment
 ENV OPENVPN=/etc/openvpn \
     EASYRSA=/usr/share/easy-rsa \
     EASYRSA_CRL_DAYS=3650 \
     EASYRSA_PKI=$OPENVPN/pki \
-    VERSION_CODENAME=$(curl --connect-timeout 15 --retry 10 --max-time 30 -s \
-      'https://github.com/debuerreotype/docker-debian-artifacts/blob/dist-amd64/stable/slim/rootfs.os-release' \
-      | grep -oP 'VERSION_CODENAME=\K.*')
+    VERSION_CODENAME=${VERSION_CODENAME}
 
 # add prerequirements for openvpn
 RUN echo "deb http://build.openvpn.net/debian/openvpn/stable ${VERSION_CODENAME} main" \
