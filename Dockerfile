@@ -5,7 +5,7 @@ FROM debian:stable-slim
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
-ARG DEBIAN_FRONTEND=noninteractive
+
 
 LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.name="docker-openvpn-nas" \
@@ -24,7 +24,8 @@ ENV OPENVPN_CONF=/etc/openvpn \
     EASYRSA=/usr/share/easy-rsa \
     EASYRSA_CRL_DAYS=3650 \
     EASYRSA_PKI=${OPENVPN_CONF}/pki \
-    VERSION_CODENAME=${VERSION_CODENAME}
+    VERSION_CODENAME=${VERSION_CODENAME} \
+    DEBIAN_FRONTEND=noninteractive
 
 # set default shell: bash
 #SHELL ["/bin/bash", "-c"]
@@ -44,6 +45,7 @@ RUN (curl -fsSL https://swupdate.openvpn.net/repos/repo-public.gpg | gpg --dearm
     > /etc/apt/trusted.gpg.d/openvpn.gpg
 
 # install openvpn and it's requirements
+ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get install -yqq -o=Dpkg::Use-Pty=0 --no-install-recommends \
     openvpn easy-rsa \
     bridge-utils iproute2 iptables net-tools
