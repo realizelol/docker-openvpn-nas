@@ -31,25 +31,28 @@ ENV OPENVPN_CONF=/etc/openvpn \
 
 # escape=
 
-# add prerequirements for openvpn
-RUN echo 'deb http://build.openvpn.net/debian/openvpn/stable '${VERSION_CODENAME}' main' \
-     > /etc/apt/sources.list.d/openvpn.list
-RUN curl -fsSL https://swupdate.openvpn.net/repos/repo-public.gpg | apt-key add - >/dev/null
+
 # do an update & a full-upgrade
 RUN apt-get -qq update \
  && apt-get full-upgrade -yqq -o=Dpkg::Use-Pty=0
+# add prerequirements for openvpn
+RUN apt-get install -yqq -o=Dpkg::Use-Pty=0 --no-install-recommends \
+    curl ca-certificates gnupg2
+RUN echo 'deb http://build.openvpn.net/debian/openvpn/stable '${VERSION_CODENAME}' main' \
+    > /etc/apt/sources.list.d/openvpn.list
+RUN (curl -fsSL https://swupdate.openvpn.net/repos/repo-public.gpg | gpg --dearmor) \
+    > /etc/apt/trusted.gpg.d/openvpn.gpg
+
 # install openvpn and it's requirements
-CMD ["apt-get", "install", "-yqq", "-o=Dpkg::Use-Pty=0", "--no-install-recommends", \
-    "openvpn", "easy-rsa", "openvpn-auth-pam", \
-    "google-authenticator", "pamtester", "libqrencode", \
-    "bridge-utils", "iproute2", "iptables", "net-tools"]
+RUN apt-get install -yqq -o=Dpkg::Use-Pty=0 --no-install-recommends \
+    openvpn easy-rsa \
+    bridge-utils iproute2 iptables net-tools
 # cleanup
-CMD ["fc-cache", \
- "&&", "apt-get", "-qqy", "clean", \
- "&&", "apt-get", "-qqy", "autoclean", \
- "&&", "apt-get", "-qqy", "autoremove", \
- "&&", "rm", "-rf", "/var/lib/apt/lists/*", \
- "&&", "rm", "-rf", "/tmp/*"]
+RUN apt-get -qqy clean \
+ && apt-get -qqy autoclean \
+ && apt-get -qqy autoremove \
+ && rm -rf /var/lib/apt/lists/* \
+ && rm -rf /tmp/*
 # ?
 #RUN ln -s /usr/share/easy-rsa/easyrsa /usr/local/bin
 
