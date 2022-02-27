@@ -20,10 +20,10 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
 RUN VERSION_CODENAME=$(grep -oP 'VERSION_CODENAME=\K.*' /etc/os-release)
 
 # Set environment
-ENV OPENVPN=/etc/openvpn \
+ENV OPENVPN_CONF=/etc/openvpn \
     EASYRSA=/usr/share/easy-rsa \
     EASYRSA_CRL_DAYS=3650 \
-    EASYRSA_PKI=$OPENVPN/pki \
+    EASYRSA_PKI=${OPENVPN_CONF}/pki \
     VERSION_CODENAME=${VERSION_CODENAME}
 
 # set default shell: bash
@@ -59,7 +59,7 @@ VOLUME ["/etc/openvpn"]
 # always expose 1194/udp - remap using '-p 12345:1194/udp'
 EXPOSE 1194/udp
 
-WORKDIR /etc/openvpn
+#WORKDIR /etc/openvpn
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod a+x /usr/local/bin/docker-*
