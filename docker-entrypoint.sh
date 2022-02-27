@@ -17,3 +17,5 @@ cat > /etc/services.d/openvpn/run << EOF
 
 /usr/local/bin/openvpn --nodaemon --umask=0077 --pidfile=/var/run/openvpn.pid --logfile=/var/log/openvpn.log
 EOF
+
+exec bash
