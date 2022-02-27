@@ -32,12 +32,12 @@ ENV OPENVPN_CONF=/etc/openvpn \
 # escape=
 
 # add prerequirements for openvpn
-CMD ["/bin/bash", "-c", "echo" "'deb http://build.openvpn.net/debian/openvpn/stable '${VERSION_CODENAME}' main'", \
-     ">", "/etc/apt/sources.list.d/openvpn.list"]
-CMD ["curl", "-fsSL", "'https://swupdate.openvpn.net/repos/repo-public.gpg'", "|", "apt-key", "add", "-", ">/dev/null"]
+RUN echo 'deb http://build.openvpn.net/debian/openvpn/stable '${VERSION_CODENAME}' main' \
+     > /etc/apt/sources.list.d/openvpn.list
+RUN curl -fsSL https://swupdate.openvpn.net/repos/repo-public.gpg | apt-key add - >/dev/null
 # do an update & a full-upgrade
-CMD ["apt-get", "-qq", "update", \
- "&&", "apt-get", "full-upgrade", "-yqq", "-o=Dpkg::Use-Pty=0"]
+RUN apt-get -qq update \
+ && apt-get full-upgrade -yqq -o=Dpkg::Use-Pty=0
 # install openvpn and it's requirements
 CMD ["apt-get", "install", "-yqq", "-o=Dpkg::Use-Pty=0", "--no-install-recommends", \
     "openvpn", "easy-rsa", "openvpn-auth-pam", \
