@@ -64,8 +64,7 @@ EXPOSE 1194/udp
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod a+x /usr/local/bin/docker-*
-#ENTRYPOINT /usr/local/bin/docker-entrypoint.sh
-ENTRYPOINT ["/bin/bash"]
+ENTRYPOINT /usr/local/bin/docker-entrypoint.sh
 
 # Add support for OTP authentication using a PAM module
 #ADD ./otp/openvpn /etc/pam.d/
