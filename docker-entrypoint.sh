@@ -20,4 +20,4 @@
 
 #echo "Running openvpn - Which: $(whereis openvpn)"
 #exec "/usr/local/bin/openvpn --config /etc/openvpn/openvpn.conf --client-config-dir /etc/openvpn/ccd --crl-verify /etc/openvpn/crl.pem"
-/bin/bash
+exec /bin/bash
