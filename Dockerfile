@@ -27,7 +27,7 @@ ENV OPENVPN=/etc/openvpn \
     VERSION_CODENAME=${VERSION_CODENAME}
 
 # set default shell: bash
-SHELL ["/bin/bash", "-c", "\"$@\""]
+SHELL ["/bin/bash", "-c", "$@"]
 
 # add prerequirements for openvpn
 CMD ["/bin/bash", "-c", "echo 'deb http://build.openvpn.net/debian/openvpn/stable '${VERSION_CODENAME}' main' \
