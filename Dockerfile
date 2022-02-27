@@ -17,14 +17,11 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.version=$VERSION \
       org.label-schema.schema-version="1.0"
 
-RUN VERSION_CODENAME=$(grep -oP 'VERSION_CODENAME=\K.*' /etc/os-release)
-
 # Set environment
 ENV OPENVPN_CONF=/etc/openvpn \
     EASYRSA=/usr/share/easy-rsa \
     EASYRSA_CRL_DAYS=3650 \
     EASYRSA_PKI=${OPENVPN_CONF}/pki \
-    VERSION_CODENAME=${VERSION_CODENAME} \
     DEBIAN_FRONTEND=noninteractive
 
 # set default shell: bash
@@ -38,10 +35,11 @@ RUN apt-get -qq update
 # add prerequirements for openvpn
 RUN apt-get install -yqq -o=Dpkg::Use-Pty=0 --no-install-recommends \
     curl ca-certificates gnupg2
-RUN echo deb http://build.openvpn.net/debian/openvpn/stable ${VERSION_CODENAME} main \
+RUN echo deb http://build.openvpn.net/debian/openvpn/stable \
+    $(grep -oP 'VERSION_CODENAME=\K.*' /etc/os-release) main \
     > /etc/apt/sources.list.d/openvpn.list
-RUN (curl -fsSL https://swupdate.openvpn.net/repos/repo-public.gpg | gpg --dearmor) \
-    > /etc/apt/trusted.gpg.d/openvpn.gpg
+RUN (curl -fsSL https://swupdate.openvpn.net/repos/repo-public.gpg \
+    | gpg --dearmor) > /etc/apt/trusted.gpg.d/openvpn.gpg
 # install openvpn and it's requirements
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get install -yqq -o=Dpkg::Use-Pty=0 --no-install-recommends \
