@@ -22,7 +22,7 @@ ENV OPENVPN=/etc/openvpn \
     EASYRSA=/usr/share/easy-rsa \
     EASYRSA_CRL_DAYS=3650 \
     EASYRSA_PKI=$OPENVPN/pki \
-    OS_VER=$(cat test.txt | grep -oP 'VERSION="[0-9]* \(\K(.*)(?=\)")')
+    OS_VER=$(cat /etc/os-release | grep -oP 'VERSION="[0-9]* \(\K(.*)(?=\)")')
 
 # add prerequirements for openvpn
 RUN echo "deb http://build.openvpn.net/debian/openvpn/stable ${OS_VER} main" \
