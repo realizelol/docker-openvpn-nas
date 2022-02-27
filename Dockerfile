@@ -1,5 +1,5 @@
 # use latest debian image
-FROM debian:latest
+FROM debian:stable-slim
 
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE
@@ -22,10 +22,12 @@ ENV OPENVPN=/etc/openvpn \
     EASYRSA=/usr/share/easy-rsa \
     EASYRSA_CRL_DAYS=3650 \
     EASYRSA_PKI=$OPENVPN/pki \
-    OS_VER=$(cat /etc/os-release | grep -oP 'VERSION="[0-9]* \(\K(.*)(?=\)")')
+    VERSION_CODENAME=$(curl \
+      "https://github.com/debuerreotype/docker-debian-artifacts/blob/dist-amd64/stable/slim/rootfs.os-release" \
+      | grep -oP 'VERSION_CODENAME=\K.*')
 
 # add prerequirements for openvpn
-RUN echo "deb http://build.openvpn.net/debian/openvpn/stable ${OS_VER} main" \
+RUN echo "deb http://build.openvpn.net/debian/openvpn/stable ${VERSION_CODENAME} main" \
     > /etc/apt/sources.list.d/openvpn.list
 RUN curl --connect-timeout 15 --retry 10 --max-time 30 -s \
     "https://swupdate.openvpn.net/repos/repo-public.gpg" \
