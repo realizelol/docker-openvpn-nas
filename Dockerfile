@@ -22,8 +22,8 @@ ENV OPENVPN=/etc/openvpn \
     EASYRSA=/usr/share/easy-rsa \
     EASYRSA_CRL_DAYS=3650 \
     EASYRSA_PKI=$OPENVPN/pki \
-    VERSION_CODENAME=$(curl \
-      "https://github.com/debuerreotype/docker-debian-artifacts/blob/dist-amd64/stable/slim/rootfs.os-release" \
+    VERSION_CODENAME=$(curl --connect-timeout 15 --retry 10 --max-time 30 -s \
+      'https://github.com/debuerreotype/docker-debian-artifacts/blob/dist-amd64/stable/slim/rootfs.os-release' \
       | grep -oP 'VERSION_CODENAME=\K.*')
 
 # add prerequirements for openvpn
