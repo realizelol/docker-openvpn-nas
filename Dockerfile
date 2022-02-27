@@ -33,17 +33,15 @@ ENV OPENVPN_CONF=/etc/openvpn \
 # escape=
 
 
-# do an update & a full-upgrade
-RUN apt-get -qq update \
- && apt-get full-upgrade -yqq -o=Dpkg::Use-Pty=0
+# do an update before installing new packages
+RUN apt-get -qq update
 # add prerequirements for openvpn
 RUN apt-get install -yqq -o=Dpkg::Use-Pty=0 --no-install-recommends \
     curl ca-certificates gnupg2
-RUN echo 'deb http://build.openvpn.net/debian/openvpn/stable '${VERSION_CODENAME}' main' \
+RUN echo deb http://build.openvpn.net/debian/openvpn/stable ${VERSION_CODENAME} main \
     > /etc/apt/sources.list.d/openvpn.list
 RUN (curl -fsSL https://swupdate.openvpn.net/repos/repo-public.gpg | gpg --dearmor) \
     > /etc/apt/trusted.gpg.d/openvpn.gpg
-
 # install openvpn and it's requirements
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get install -yqq -o=Dpkg::Use-Pty=0 --no-install-recommends \
