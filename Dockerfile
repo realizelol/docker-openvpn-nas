@@ -36,13 +36,13 @@ CMD ["/bin/bash", "-c", "echo" "'deb http://build.openvpn.net/debian/openvpn/sta
      ">", "/etc/apt/sources.list.d/openvpn.list"]
 CMD ["curl", "-fsSL", "'https://swupdate.openvpn.net/repos/repo-public.gpg'", "|", "apt-key", "add", "-", ">/dev/null"]
 # do an update & a full-upgrade
-RUN apt-get -qq update \
- && apt-get full-upgrade -yqq -o=Dpkg::Use-Pty=0
+CMD ["apt-get", "-qq", "update", \
+ "&&", "apt-get", "full-upgrade", "-yqq", "-o=Dpkg::Use-Pty=0"]
 # install openvpn and it's requirements
-RUN apt-get install -yqq -o=Dpkg::Use-Pty=0 --no-install-recommends \
-    openvpn easy-rsa openvpn-auth-pam \
-    google-authenticator pamtester libqrencode \
-    bridge-utils iproute2 iptables net-tools
+CMD ["apt-get", "install", "-yqq", "-o=Dpkg::Use-Pty=0", "--no-install-recommends", \
+    "openvpn", "easy-rsa", "openvpn-auth-pam", \
+    "google-authenticator", "pamtester", "libqrencode", \
+    "bridge-utils", "iproute2", "iptables", "net-tools"]
 # cleanup
 RUN fc-cache \
  && apt-get -qqy clean \
