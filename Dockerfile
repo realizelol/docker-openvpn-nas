@@ -58,12 +58,9 @@ EXPOSE 1194/udp
 
 WORKDIR /etc/openvpn
 
-ADD
+ADD ./docker-entrypint.sh /usr/local/bin/docker-entrypint.sh
 RUN chmod a+x /usr/local/bin/*
 CMD ["docker-entrypint.sh"]
 
-
-
-
 # Add support for OTP authentication using a PAM module
-ADD ./otp/openvpn /etc/pam.d/
+#ADD ./otp/openvpn /etc/pam.d/
