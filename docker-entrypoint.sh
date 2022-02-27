@@ -18,4 +18,5 @@ cat > /etc/services.d/openvpn/run << EOF
 /usr/local/bin/openvpn --nodaemon --umask=0077 --pidfile=/var/run/openvpn.pid --logfile=/var/log/openvpn.log
 EOF
 
-exec bash
+echo "Running 'openvpn ${ARGS[@]} ${USER_ARGS[@]}'"
+exec "openvpn --config /etc/openvpn/openvpn.conf --client-config-dir /etc/openvpn/ccd --crl-verify /etc/openvpn/crl.pem"
