@@ -58,7 +58,7 @@ EXPOSE 1194/udp
 
 WORKDIR /etc/openvpn
 
-ADD ./docker-entrypint.sh /usr/local/bin/docker-entrypint.sh
+ADD docker-entrypint.sh /usr/local/bin/docker-entrypint.sh
 RUN chmod a+x /usr/local/bin/*
 CMD ["docker-entrypint.sh"]
 
