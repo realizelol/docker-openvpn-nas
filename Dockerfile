@@ -1,6 +1,8 @@
 # use latest ubuntu image
 FROM ubuntu:latest
-## UBUNTU is more up2date @ openvpn -> recheck easy-rsa 3.0.8-1@debian11
+## UBUNTU is more up2date @ openvpn:
+# Debian: http://build.openvpn.net/debian/openvpn/testing/pool/bullseye/main/o/openvpn/
+# Ubuntu: http://build.openvpn.net/debian/openvpn/testing/pool/focal/main/o/openvpn/
 
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE
