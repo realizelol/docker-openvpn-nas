@@ -18,15 +18,15 @@ apt-get -qq update
 apt-get -yqq -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" full-upgrade
 
 #update easy-rsa if not the latest
-EASYRSA_LOCAL_VER=$(dpkg -s 'easy-rsa' | grep -oP '^Version: \K.*')
+EASYRSA_LOCAL_VER=$(dpkg -s 'easy-rsa' 2>/dev/null | grep -oP '^Version: \K.*')
 EASYRSA_GITHUB_VER=$(curl -fsSL https://api.github.com/repos/OpenVPN/easy-rsa/releases/latest \
-                     | grep -oP '"tag_name": "v\K(.*)(?=",)')
-if [[ ! -z $(dpkg -l easy-rsa | grep -E '^(r|h|i)i') ]]; then
+                     2>/dev/null | grep -oP '"tag_name": "v\K(.*)(?=",)')
+if [[ ! -z $(dpkg -l easy-rsa 2>/dev/null | grep -E '^(r|h|i)i') ]]; then
   if [[ "${EASYRSA_LOCAL_VER//[^[:alnum:]]/}" != "${EASYRSA_GITHUB_VER//[^[:alnum:]]/}" ]] && \
      [[ "${EASYRSA_LOCAL_VER//[^[:alnum:]]/}" <  "${EASYRSA_GITHUB_VER//[^[:alnum:]]/}" ]]; then
     apt-get autoremove --purge -yqq easy-rsa
     mkdir -p /tmp/easyrsadl
-    curl -fsSL https://api.github.com/repos/OpenVPN/easy-rsa/releases/latest \
+    curl -fsSL https://api.github.com/repos/OpenVPN/easy-rsa/releases/latest 2>/dev/null \
       | sed -n 's/.*"browser_download_url": "\(.*\).tgz".*/\1/p' \
       | xargs -n1 -I % curl -fsSL %.tgz -o - \
       | tar -xz --strip-components=1 -C /tmp/easyrsadl
@@ -35,7 +35,7 @@ if [[ ! -z $(dpkg -l easy-rsa | grep -E '^(r|h|i)i') ]]; then
   fi
 else
   mkdir -p /tmp/easyrsadl
-  curl -fsSL https://api.github.com/repos/OpenVPN/easy-rsa/releases/latest \
+  curl -fsSL https://api.github.com/repos/OpenVPN/easy-rsa/releases/latest 2>/dev/null \
     | sed -n 's/.*"browser_download_url": "\(.*\).tgz".*/\1/p' \
     | xargs -n1 -I % curl -fsSL %.tgz -o - \
     | tar -xz --strip-components=1 -C /tmp/easyrsadl
