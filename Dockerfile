@@ -9,7 +9,7 @@ ARG VERSION
 
 LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.name="docker-openvpn-nas" \
-      org.label-schema.description="docker container with OpenVPN on ubuntu linux for NAS systems" \
+      org.label-schema.description="OpenVPN on ubuntu docker for NAS systems" \
       org.label-schema.url="https://github.com/realizelol/docker-openvpn-nas/" \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.vcs-url="https://github.com/realizelol/docker-openvpn-nas/" \
@@ -39,16 +39,13 @@ RUN (curl -fsSL https://swupdate.openvpn.net/repos/repo-public.gpg \
 # install openvpn and it's requirements
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get install -yqq -o=Dpkg::Use-Pty=0 --no-install-recommends \
-    openvpn easy-rsa \
-    bridge-utils iproute2 iptables net-tools
+    openvpn bridge-utils iproute2 iptables net-tools
 # cleanup
 RUN apt-get -qqy clean \
  && apt-get -qqy autoclean \
  && apt-get -qqy autoremove \
  && rm -rf /var/lib/apt/lists/* \
  && rm -rf /tmp/*
-# ?
-#RUN ln -s /usr/share/easy-rsa/easyrsa /usr/local/bin
 
 # map /etc/openvpn
 VOLUME ["/etc/openvpn"]
@@ -62,6 +59,3 @@ WORKDIR /etc/openvpn
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod a+x /usr/local/bin/docker-*
 ENTRYPOINT /usr/local/bin/docker-entrypoint.sh
-
-# Add support for OTP authentication using a PAM module
-#ADD ./otp/openvpn /etc/pam.d/
