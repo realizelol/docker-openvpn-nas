@@ -1,15 +1,29 @@
 #!/bin/bash
+# shellcheck disable=SC1091,SC2164,SC2034,SC1072,SC1073,SC1009
 set -e
+# [ENV->ENV_DEBUG]
 ENV_DEBUG=${1}
 if [[ ${ENV_DEBUG} -eq 1 ]]; then
 set -x
 fi
 
+# Create tun-device
 if [ ! -e /dev/net/tun ]; then
   if [ ! -c /dev/net/tun ]; then
     mkdir -p /dev/net
     mknod -m 666 /dev/net/tun c 10 200
   fi
+fi
+
+# Set TimeZone [ENV->TZ]
+if [ "$(cat /etc/timezone)" != "${TZ}" ]; then
+	if [ -d "/usr/share/zoneinfo/${TZ}" ] || \
+		[ ! -e "/usr/share/zoneinfo/${TZ}" ] || \
+		[ -z "${TZ}" ]; then
+			TZ="Etc/UTC"
+	fi
+	ln -fs "/usr/share/zoneinfo/${TZ}" /etc/localtime
+	exec dpkg-reconfigure -f noninteractive tzdata
 fi
 
 # noninteractive
@@ -61,15 +75,5 @@ fi
 # chmod private keys?!?!?
 #
 
-# install cont-environment
-mkdir -p /etc/services.d/openvpn
-cat > /etc/services.d/openvpn/run << EOF
-#!/usr/bin/with-contenv bash
-
-/usr/sbin/openvpn --nodaemon --umask=0077 --pidfile=/var/run/openvpn.pid --logfile=/var/log/openvpn.log
-EOF
-
-SERVER_KEY_FILE=$(find /etc/openvpn -maxdepth 1 -iname "server_*.key" | head -n1)
-
-echo "$(date +'%Y-%m-%d %H:%M:%S') - Running openvpn"
+echo "$(date +'%Y-%m-%d %H:%M:%S') Starting OpenVPN:"
 exec /bin/bash -c "/usr/sbin/openvpn --config /etc/openvpn/server.conf --client-config-dir /etc/openvpn/ccd --crl-verify /etc/openvpn/crl.pem"

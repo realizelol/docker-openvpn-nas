@@ -1,3 +1,35 @@
+#
+# openvpn-nas
+#
+# actually only on x86_64(amd64)
+#
+# Howto run:
+# docker run -d --name=openvpn-nas --cap-add=NET_ADMIN -e TZ=Europe/Berlin -p 1194:1194/udp \
+# -v /home/ca/openvpn:/etc/openvpn --restart unless-stopped realizelol/openvpn-nas
+#
+# upcoming:
+#
+#
+# iptables ( !! SO DONT USE THIS DOCKER !! ) ==> only for testing purpose
+#
+#
+# Management by: docker exec -it openvpn-nas manageMenu / installOpenVPN
+# https://github.com/angristan/openvpn-install/blob/master/openvpn-install.sh
+# allow unbound/dnsmasq?
+#
+# https://github.com/nuBacuk/docker-openvpn-arm64:
+# -> GoogleAuth
+# -> ARM64(aarch64) etc?
+#
+#
+# also interessting:
+# https://github.com/kylemanna/docker-openvpn
+# https://github.com/linuxserver-archive/docker-openvpn-as
+# https://github.com/WeeJeWel/pivpn-web
+# https://github.com/mr-bolle/docker-openvpn-pihole
+# https://github.com/pivpn/pivpn
+
+
 # use latest ubuntu image
 FROM ubuntu:latest
 ## UBUNTU is more up2date @ openvpn:
@@ -27,12 +59,13 @@ ENV OPENVPN_CONF=/etc/openvpn \
     ENV_DEBUG=0 \
     DEBIAN_FRONTEND=noninteractive
 
+# Disable automatic escaping ("#" is needed)
 # escape=
 
 # do an update & a full-upgrade
 RUN apt-get -qq update \
  && apt-get full-upgrade -yqq -o=Dpkg::Use-Pty=0
-# add prerequirements for openvpn
+# add prerequirements for OpenVPN
 RUN apt-get install -yqq -o=Dpkg::Use-Pty=0 --no-install-recommends \
     curl ca-certificates gnupg2
 RUN echo deb http://build.openvpn.net/debian/openvpn/stable \
@@ -40,13 +73,13 @@ RUN echo deb http://build.openvpn.net/debian/openvpn/stable \
     > /etc/apt/sources.list.d/openvpn.list
 RUN (curl -fsSL https://swupdate.openvpn.net/repos/repo-public.gpg \
     | gpg --dearmor) > /etc/apt/trusted.gpg.d/openvpn.gpg
-# reupdate apt-cache with new repository
+# reupdate apt-cache with OpenVPN repository
 RUN apt-get -qq update
-# install openvpn and it's requirements
+# install OpenVPN and it's requirements
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get install -yqq -o=Dpkg::Use-Pty=0 --no-install-recommends \
     openvpn bridge-utils iproute2 iptables net-tools
-# cleanup
+# cleanup (reduce img size)
 RUN apt-get -qqy clean \
  && apt-get -qqy autoclean \
  && apt-get -qqy autoremove \
@@ -62,6 +95,9 @@ EXPOSE 1194/udp
 # CD to /etc/openvpn
 WORKDIR /etc/openvpn
 
+# Move docker-entrypoint.sh script into place
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+# Make everyething with docker- in front executable
 RUN chmod a+x /usr/local/bin/docker-*
+# Run ENTRYPOINT script
 ENTRYPOINT /usr/local/bin/docker-entrypoint.sh ${ENV_DEBUG}
