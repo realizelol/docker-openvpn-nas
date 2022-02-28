@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
-if [[ ${ENV_DEBUG} -eq 1]]; then set -x; fi
+ENV_DEBUG=${1}
+if [[ ${ENV_DEBUG} -eq 1 ]]; then
+set -x
+fi
 
 if [ ! -e /dev/net/tun ]; then
   if [ ! -c /dev/net/tun ]; then

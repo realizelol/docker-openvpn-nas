@@ -22,6 +22,7 @@ ENV OPENVPN_CONF=/etc/openvpn \
     EASYRSA=/usr/share/easy-rsa \
     EASYRSA_CRL_DAYS=3650 \
     EASYRSA_PKI=${OPENVPN_CONF}/pki \
+    ENV_DEBUG=0 \
     DEBIAN_FRONTEND=noninteractive
 
 # escape=
@@ -58,4 +59,4 @@ WORKDIR /etc/openvpn
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod a+x /usr/local/bin/docker-*
-ENTRYPOINT /usr/local/bin/docker-entrypoint.sh
+ENTRYPOINT /usr/local/bin/docker-entrypoint.sh ${ENV_DEBUG}
