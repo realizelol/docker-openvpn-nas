@@ -27,8 +27,9 @@ ENV OPENVPN_CONF=/etc/openvpn \
 
 # escape=
 
-# do an update before installing new packages
-RUN apt-get -qq update
+# do an update & a full-upgrade
+RUN apt-get -qq update \
+ && apt-get full-upgrade -yqq -o=Dpkg::Use-Pty=0
 # add prerequirements for openvpn
 RUN apt-get install -yqq -o=Dpkg::Use-Pty=0 --no-install-recommends \
     curl ca-certificates gnupg2
