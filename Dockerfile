@@ -38,6 +38,8 @@ RUN echo deb http://build.openvpn.net/debian/openvpn/stable \
     > /etc/apt/sources.list.d/openvpn.list
 RUN (curl -fsSL https://swupdate.openvpn.net/repos/repo-public.gpg \
     | gpg --dearmor) > /etc/apt/trusted.gpg.d/openvpn.gpg
+# reupdate apt-cache with new repository
+RUN apt-get -qq update
 # install openvpn and it's requirements
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get install -yqq -o=Dpkg::Use-Pty=0 --no-install-recommends \
