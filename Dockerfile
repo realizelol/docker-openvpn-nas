@@ -1,15 +1,15 @@
-# use latest debian image
-FROM debian:stable-slim
+# use latest ubuntu image
+FROM ubuntu:latest
+## UBUNTU is more up2date @ openvpn -> recheck easy-rsa 3.0.8-1@debian11
 
 # Build-time metadata as defined at http://label-schema.org
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
 
-
 LABEL org.label-schema.build-date=$BUILD_DATE \
       org.label-schema.name="docker-openvpn-nas" \
-      org.label-schema.description="docker container with OpenVPN on debian linux for NAS systems" \
+      org.label-schema.description="docker container with OpenVPN on ubuntu linux for NAS systems" \
       org.label-schema.url="https://github.com/realizelol/docker-openvpn-nas/" \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.vcs-url="https://github.com/realizelol/docker-openvpn-nas/" \
@@ -24,11 +24,7 @@ ENV OPENVPN_CONF=/etc/openvpn \
     EASYRSA_PKI=${OPENVPN_CONF}/pki \
     DEBIAN_FRONTEND=noninteractive
 
-# set default shell: bash
-#SHELL ["/bin/bash", "-c"]
-
 # escape=
-
 
 # do an update before installing new packages
 RUN apt-get -qq update
