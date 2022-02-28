@@ -1,6 +1,6 @@
 #!/bin/bash
-set -x
 set -e
+if [[ ${ENV_DEBUG} -eq 1]]; then set -x; fi
 
 if [ ! -e /dev/net/tun ]; then
   if [ ! -c /dev/net/tun ]; then
@@ -18,10 +18,10 @@ apt-get -qq update
 apt-get -yqq -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" full-upgrade
 
 #update easy-rsa if not the latest
-EASYRSA_LOCAL_VER=$(dpkg -s 'easy-rsa' 2>/dev/null | grep -oP '^Version: \K.*')
+EASYRSA_LOCAL_VER=$(dpkg -s 'easy-rsa' 2>/dev/null | grep -oP '^Version: \K.*' || true)
 EASYRSA_GITHUB_VER=$(curl -fsSL https://api.github.com/repos/OpenVPN/easy-rsa/releases/latest \
-                     2>/dev/null | grep -oP '"tag_name": "v\K(.*)(?=",)')
-if [[ ! -z $(dpkg -l easy-rsa 2>/dev/null | grep -E '^(r|h|i)i') ]]; then
+                     2>/dev/null | grep -oP '"tag_name": "v\K(.*)(?=",)' || true)
+if [[ ! -z $(dpkg -l easy-rsa 2>/dev/null | grep -E '^(r|h|i)i' || true) ]]; then
   if [[ "${EASYRSA_LOCAL_VER//[^[:alnum:]]/}" != "${EASYRSA_GITHUB_VER//[^[:alnum:]]/}" ]] && \
      [[ "${EASYRSA_LOCAL_VER//[^[:alnum:]]/}" <  "${EASYRSA_GITHUB_VER//[^[:alnum:]]/}" ]]; then
     apt-get autoremove --purge -yqq easy-rsa
