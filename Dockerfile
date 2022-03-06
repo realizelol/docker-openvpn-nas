@@ -67,7 +67,7 @@ RUN apt-get -qq update \
  && apt-get full-upgrade -yqq -o=Dpkg::Use-Pty=0
 # add prerequirements for OpenVPN
 RUN apt-get install -yqq -o=Dpkg::Use-Pty=0 --no-install-recommends \
-    curl ca-certificates gnupg2
+    curl ca-certificates gnupg2 tzdata
 RUN echo deb http://build.openvpn.net/debian/openvpn/stable \
     $(grep -oP 'VERSION_CODENAME=\K.*' /etc/os-release) main \
     > /etc/apt/sources.list.d/openvpn.list
