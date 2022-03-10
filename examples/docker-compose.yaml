@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  openvpn-nas:
+    container_name: "openvpn-nas"
+    image: "realizelol/openvpn-nas:latest"
+    volumes:
+      - "/share/Container/docker/openvpn-nas/etc-openvpn:/etc/openvpn"
+    devices:
+      - "/dev/net/tun:/dev/net/tun"
+    privileged: true
+    cap_add:
+      - "NET_ADMIN"
+    restart: "unless-stopped"
+    networks:
+      qnet-openvpn:
+        ipv4_address: "${SERVERIP}"
+
+networks:
+  qnet-openvpn:
+    enable_ipv6: false
+    driver: qnet
+    driver_opts:
+      com.docker.network.enable_ipv6: "false"
+    ipam:
+      driver: qnet
+      options:
+        iface: "eth3"
+      config:
+        - subnet: ${SERVER_CIDR}
+          gateway: ${SERVER_GW}
+
+networks:
+  vpn:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.20.0.0/16
+        gateway: 172.20.0.1

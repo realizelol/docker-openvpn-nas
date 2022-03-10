@@ -1,11 +1,8 @@
 #
 # openvpn-nas
 #
-# actually only on x86_64(amd64)
-#
-# Howto run:
-# docker run -d --name=openvpn-nas --cap-add=NET_ADMIN -e TZ=Europe/Berlin -p 1194:1194/udp \
-# -v /home/ca/openvpn:/etc/openvpn --restart unless-stopped realizelol/openvpn-nas
+# actually only on x86_64(amd64) architecture
+
 #
 # upcoming:
 #
@@ -59,7 +56,7 @@ ENV OPENVPN_CONF=/etc/openvpn \
     ENV_DEBUG=0 \
     DEBIAN_FRONTEND=noninteractive
 
-# Disable automatic escaping ("#" is needed)
+# Disable automatic escaping ("#" is needed - dont remove !)
 # escape=
 
 # do an update & a full-upgrade
