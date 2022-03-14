@@ -2,8 +2,8 @@ docker run -d \
   --name=openvpn-nas \
   --cap-add=NET_ADMIN \
   -e TZ=Europe/Berlin \
-  -e LAN_NETWORK=10.123.231.0/24 \
-  -e NAME_SERVERS=10.123.231.1,9.9.9.9 \
+  -e DOCKER_NETWORK=10.123.231.0/24 \
+  -e DNS=10.123.231.1,9.9.9.9 \
   -p ${OVPN_PORT}:1194/udp \
   -v /home/ca/openvpn:/etc/openvpn \
   -v /etc/localtime:/etc/localtime:ro \
